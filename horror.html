@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mod 5 Project</title>
-    <script src="index.js" defer></script>
-    <script src="movie.js" defer></script>
+    <script src="index.js"defer></script>
+    <script src="movie.js"defer></script>
     <script src="https://kit.fontawesome.com/f5dd4a2952.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -33,13 +33,18 @@
             </div>
             <div class="search">
                 <h1>Search Movies</h1>
+                <a href="movie.html">
                 <input class="search__bar" type="text" id="searchInput">
-                <i class="fa-solid fa-magnifying-glass" style="color: rgb(21, 20, 20);" id="searchbutton"
-                    onclick="searchMovie()"></i>
+                </a>
+                <i class="fa-solid fa-magnifying-glass" style="color: rgb(21, 20, 20);"></i>
             </div>
-            
         </div>
     </section>
-</body>
-
-</html>
+    <div class="movie__list">
+        <div class="movie">
+            <p>Title</p>
+            <p>year</p>
+            <img class="movie__img">poster</img>
+            <p>imdbID</p>
+        </div>
+    </div>
