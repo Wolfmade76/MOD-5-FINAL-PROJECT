@@ -4,9 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mod 5 Project</title>
+    <script src="index.js"defer></script>
+    <script src="https://kit.fontawesome.com/f5dd4a2952.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="style.css">
-    <script src="movie.js" defer></script>
-    <title>Project Mod 5</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Roboto:ital,wght@0,100..900;1,100..900&family=Sekuya&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
@@ -18,7 +24,7 @@
                     <ul>
                         <li>
                             <a href="index.html">Home</a>
-                            <a href="movies.html">Movies</a>
+                            <a href="movie.html">Movies</a>
                             <a href="">Contact</a>
                         </li>
                     </ul>
@@ -26,10 +32,10 @@
             </div>
             <div class="search">
                 <h1>Search Movies</h1>
-                <input class="search__bar">
-                <i class="fa-solid fa-magnifying-glass" style="color: rgb(21, 20, 20);"></i>
+                <input class="search__bar" type="text" id="searchInput">
+                <i class="fa-solid fa-magnifying-glass search__button" style="color: rgb(21, 20, 20);" onclick="goToMoviePage()"></i>
             </div>
-        </div>
+        </div>                   
     </section>
     <div class="movie__list">
         <div class="movie">

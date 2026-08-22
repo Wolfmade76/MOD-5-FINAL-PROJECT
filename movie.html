@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mod 5 Project</title>
-    <script src="index.js" defer></script>
-    <script src="movie.js" defer></script>
+    <script src="movie.js"defer></script>
     <script src="https://kit.fontawesome.com/f5dd4a2952.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,7 +16,7 @@
 </head>
 
 <body>
-    <section>
+        <section>
         <div class="nav">
             <div class="heading">
                 <h2>Wolf's Cinema</h2>
@@ -31,14 +30,30 @@
                     </ul>
                 </div>
             </div>
-            <div class="search">
-                <h1>Search Movies</h1>
-                <input class="search__bar" type="text" id="searchInput">
-                <i class="fa-solid fa-magnifying-glass" style="color: rgb(21, 20, 20);" id="searchbutton"
-                    onclick="searchMovie()"></i>
-            </div>
-            
+        </div>                   
+    </section>
+    <div class="filter">
+    <label for="genreFilter">Filter by genre:</label>
+
+    <select id="genreFilter">
+        <option value="all">All Movies</option>
+        <option value="Action">Action</option>
+        <option value="Comedy">Comedy</option>
+        <option value="Drama">Drama</option>
+        <option value="Horror">Horror</option>
+        <option value="Romance">Romance</option>
+        <option value="Western">Western</option>
+    </select>
+</div>
+    <section id="moviecontainer">
+    <div class="movie__list">
+        <div class="movie">
+            <p>Title</p>
+            <p>year</p>
+            <img class="movie__img">poster</img>
+            <p>imdbID</p>
         </div>
+    </div>
     </section>
 </body>
 

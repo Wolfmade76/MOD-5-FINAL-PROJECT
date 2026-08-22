@@ -19,8 +19,58 @@
     <section>
         <div class="nav">
             <div class="heading">
-                <h2>Wolf's Cinema</h2>
+                <h2 class="nav__header">Wolf's Cinema</h2>
                 <div class="links">
+                    <ul>
+                        <li>
+                            <a href="index.html" class="link">Home</a>
+                            <a href="movie.html" class="link">Movies</a>
+                            <a href="" class="link">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="search">
+                <h1>Search Movies</h1>
+                <input class="search__bar" type="text" id="searchInput">
+                <i class="fa-solid fa-magnifying-glass search__button" style="color: rgb(21, 20, 20);" onclick="goToMoviePage()"></i>
+            </div>
+        </div>                   
+    </section>
+    <section>
+        <div class="genre__list">
+            <div class="movie__img--wrapper">
+                <a href="horror.html" class="genre__link">
+                <img src="assets/ChatGPT Image Aug 13, 2026, 10_35_18 AM.png" class="movie__img">
+                </a>
+                <a href="comedy.html" class="genre__link">
+                <img src="assets/ChatGPT Image Aug 13, 2026, 11_01_01 AM.png" class="movie__img">
+                </a>
+                <a href="action.html" class="genre__link">
+                <img src="assets/action.png" class="movie__img">
+                </a>
+                <a href="romance.html" class="genre__link">
+                <img src="assets/romance.png" class="movie__img">
+                </a>
+                <a href="drama.html" class="genre__link">
+                <img src="assets/drana'.png" class="movie__img">
+                </a>
+                <a href="western.html" class="genre__link">
+                <img src="assets/western.png" class="movie__img">
+                </a>
+            </div>
+        </div>
+    </section>
+    </section id="footer">
+    <div class="footer__container">
+        <div class="footer__img--wrapper">
+            <a href="#">
+        <img src="assets/wolf cinema.png" class="footer__img">
+            </a>
+        </div>
+        <div class="footer__row">
+            <h1 class="footer__h1">WOLF CINEMA</h1>
+            <div class="footer__links">
                     <ul>
                         <li>
                             <a href="index.html">Home</a>
@@ -29,30 +79,7 @@
                         </li>
                     </ul>
                 </div>
-            </div>
-            <div class="search">
-                <h1>Search Movies</h1>
-                <input class="search__bar" type="text" id="searchInput">
-                <i class="fa-solid fa-magnifying-glass" style="color: rgb(21, 20, 20);" id="searchbutton" onclick="searchMovie()"></i>
-            </div>
-        </div>                   
-    </section>
-    <section>
-        <div class="genre__list">
-            <div class="movie__img--wrapper">
-                <a href="horror.html">
-                <img src="assets/ChatGPT Image Aug 13, 2026, 10_35_18 AM.png" class="movie__img">
-                </a>
-                <img src="assets/ChatGPT Image Aug 13, 2026, 11_01_01 AM.png" class="movie__img">
-                <img src="assets/action.png" class="movie__img">
-                <img src="assets/romance.png" class="movie__img">
-                <img src="assets/drana'.png" class="movie__img">
-                <img src="assets/western.png" class="movie__img">
-            </div>
         </div>
-    </section>
-
-
     </div>
     </section>
 </body>

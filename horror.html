@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mod 5 Project</title>
     <script src="index.js"defer></script>
-    <script src="movie.js"defer></script>
     <script src="https://kit.fontawesome.com/f5dd4a2952.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -33,12 +32,10 @@
             </div>
             <div class="search">
                 <h1>Search Movies</h1>
-                <a href="movie.html">
                 <input class="search__bar" type="text" id="searchInput">
-                </a>
-                <i class="fa-solid fa-magnifying-glass" style="color: rgb(21, 20, 20);"></i>
+                <i class="fa-solid fa-magnifying-glass search__button" style="color: rgb(21, 20, 20);" onclick="goToMoviePage()"></i>
             </div>
-        </div>
+        </div>                   
     </section>
     <div class="movie__list">
         <div class="movie">
@@ -48,3 +45,6 @@
             <p>imdbID</p>
         </div>
     </div>
+</body>
+
+</html>
