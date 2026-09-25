@@ -1,6 +1,3 @@
-const API_KEY = "b8294bb2";
-const API_URL = "https://www.omdbapi.com/";
-
 const searchInput = document.querySelector("#searchInput");
 const searchButton = document.querySelector(".search__button");
 

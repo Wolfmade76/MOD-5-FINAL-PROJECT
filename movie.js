@@ -1,12 +1,16 @@
+/// THESE ARE CONSTANTS ///
+
 const API_KEY = "55244497";
 const API_URL = "https://www.omdbapi.com/";
 
+const searchInput = document.querySelector("#searchInput");
+const searchBtn = document.querySelector(".search__btn");
 const movieList = document.querySelector(".movie__list");
 const genreFilter = document.querySelector("#genreFilter");
 
-let movies = [];
+/// THESE ARE THE DYNAMIC SEARCH TAGS ///
 
-const movieSearchTerms = [
+const searchTerms = [
     "star",
     "love",
     "man",
@@ -20,224 +24,144 @@ const movieSearchTerms = [
     "king",
     "scream",
     "spider",
-    "grown",
+    "grown"
 ];
 
-async function searchMovies() {
-    const params = new URLSearchParams(window.location.search);
-    const movieName = params.get("search");
+let allMovies = [];
 
-    if (movieName && movieName.trim() !== "") {
-        await fetchMovies(movieName.trim());
-    } else {
-        await loadMovieCatalog();
-    }
-}
+/// LOAD MOVIES WHEN THE PAGE OPENS ///
 
-async function fetchMovies(searchTerm) {
-    showLoadingMessage();
+async function loadMovies() {
 
-    try {
-        const searchResponse = await fetch(
-            `${API_URL}?apikey=${API_KEY}&s=${encodeURIComponent(
-                searchTerm
-            )}&type=movie`
-        );
+    movieList.innerHTML = "<p>Loading movies...</p>";
 
-        if (!searchResponse.ok) {
-            throw new Error(`HTTP error: ${searchResponse.status}`);
-        }
+    const moviesMap = new Map();
 
-        const searchData = await searchResponse.json();
+    for (const term of searchTerms) {
 
-        console.log("Search response:", searchData);
-
-        if (searchData.Response === "False") {
-            movies = [];
-            movieList.innerHTML = `<p>${searchData.Error}</p>`;
-            return;
-        }
-
-        const movieDetails = await Promise.all(
-            searchData.Search.map(function (movie) {
-                return getMovieDetails(movie.imdbID);
-            })
-        );
-
-        movies = movieDetails.filter(function (movie) {
-            return movie !== null;
-        });
-
-        displayMovies(movies);
-    } catch (error) {
-        console.error("Search error:", error);
-
-        movieList.innerHTML = `
-            <p>Something went wrong while searching for movies.</p>
-            <p>${error.message}</p>
-        `;
-    }
-}
-
-async function getMovieDetails(imdbID) {
-    try {
         const response = await fetch(
-            `${API_URL}?apikey=${API_KEY}&i=${imdbID}&plot=short`
+            `${API_URL}?apikey=${API_KEY}&s=${term}`
         );
-
-        if (!response.ok) {
-            throw new Error(`HTTP error: ${response.status}`);
-        }
 
         const data = await response.json();
 
-        if (data.Response === "True") {
-            return data;
-        }
+        if (!data.Search) continue;
 
-        console.error("Movie details error:", data.Error);
-        return null;
-    } catch (error) {
-        console.error("Details error:", error);
-        return null;
-    }
-}
+        const detailedMovies = await Promise.all(
 
-async function loadMovieCatalog() {
-    showLoadingMessage();
+            data.Search.map(async movie => {
 
-    try {
-        const searchRequests = movieSearchTerms.map(function (term) {
-            return fetch(
-                `${API_URL}?apikey=${API_KEY}&s=${encodeURIComponent(
-                    term
-                )}&type=movie&page=1`
-            ).then(function (response) {
-                if (!response.ok) {
-                    throw new Error(`HTTP error: ${response.status}`);
-                }
+                const details = await fetch(
+                    `${API_URL}?apikey=${API_KEY}&i=${movie.imdbID}`
+                );
 
-                return response.json();
-            });
-        });
+                return await details.json();
 
-        const searchResults = await Promise.all(searchRequests);
-
-        let searchMovies = [];
-
-        searchResults.forEach(function (result) {
-            if (result.Response === "True" && result.Search) {
-                searchMovies.push(...result.Search);
-            }
-        });
-
-        const uniqueMovies = [];
-        const movieIDs = new Set();
-
-        searchMovies.forEach(function (movie) {
-            if (!movieIDs.has(movie.imdbID)) {
-                movieIDs.add(movie.imdbID);
-                uniqueMovies.push(movie);
-            }
-        });
-
-        const movieDetails = await Promise.all(
-            uniqueMovies.map(function (movie) {
-                return getMovieDetails(movie.imdbID);
             })
+
         );
 
-        movies = movieDetails.filter(function (movie) {
-            return movie !== null;
+        detailedMovies.forEach(movie => {
+            moviesMap.set(movie.imdbID, movie);
         });
 
-        displayMovies(movies);
-    } catch (error) {
-        console.error("Catalog error:", error);
-
-        movieList.innerHTML = `
-            <p>Something went wrong while loading movies.</p>
-            <p>${error.message}</p>
-        `;
     }
+
+    allMovies = [...moviesMap.values()];
+
+    displayMovies(allMovies);
+
 }
 
-function showLoadingMessage() {
-    movieList.innerHTML = "<p>Loading movies...</p>";
-}
+/// SEARCH BAR SEARCH ///
 
-function displayMovies(movieArray) {
-    movieList.innerHTML = "";
+async function searchMovie() {
+    const movieName = searchInput.value.trim();
+    if (!movieName) {
+        displayMovies(allMovies);
+        return;
+    }
 
-    if (!movieArray || movieArray.length === 0) {
+    const response = await fetch(
+        `${API_URL}?apikey=${API_KEY}&s=${movieName}`
+    );
+
+    const data = await response.json();
+
+    if (!data.Search) {
         movieList.innerHTML = "<p>No movies found.</p>";
         return;
     }
 
-    movieArray.forEach(function (movie) {
-        const poster =
-            movie.Poster && movie.Poster !== "N/A"
-                ? movie.Poster
-                : "assets/no-poster.jpg";
+    const searchedMovies = await Promise.all(
 
-        const movieElement = document.createElement("div");
-        movieElement.className = "movie";
+        data.Search.map(async movie => {
 
-        movieElement.innerHTML = `
-            <img
-                src="${poster}"
-                alt="${movie.Title || "Movie poster"}"
-                loading="lazy"
-            >
+            const details = await fetch(
+                `${API_URL}?apikey=${API_KEY}&i=${movie.imdbID}`
+            );
 
-            <h2>${movie.Title || "Unknown title"}</h2>
+            return await details.json();
 
-            <p>
-                <strong>Year:</strong>
-                ${movie.Year || "Unknown"}
-            </p>
+        })
 
-            <p>
-                <strong>Genre:</strong>
-                ${movie.Genre || "Unknown"}
-            </p>
+    );
+    window.location.href = `movie.html?search=${encodeURIComponent(movieName)}`;
+    displayMovies(searchedMovies);
 
-            <p>
-                <strong>Rating:</strong>
-                ${
-                    movie.imdbRating && movie.imdbRating !== "N/A"
-                        ? movie.imdbRating
-                        : "Not rated"
-                }
-            </p>
+}
+
+/// TURN JAVASCRIPT INTO HTML ///
+
+function displayMovies(movieArray) {
+
+    movieList.innerHTML = "";
+
+    movieArray.forEach(movie => {
+
+        movieList.innerHTML += `
+            <div class="movie">
+
+                <img
+                    src="${movie.Poster !== "N/A" ? movie.Poster : "https://placehold.co/300x450?text=No+Poster"}"
+                    alt="${movie.Title}"
+                >
+
+                <h2>${movie.Title}</h2>
+
+                <p>${movie.Year}</p>
+
+                <p><strong>${movie.Genre}</strong></p>
+
+            </div>
         `;
 
-        movieList.appendChild(movieElement);
     });
+
 }
 
-function filterMoviesByGenre() {
-    const selectedGenre = genreFilter.value.toLowerCase();
+/// GENRE FILTER ///
+
+genreFilter.addEventListener("change", () => {
+
+    const selectedGenre = genreFilter.value;
 
     if (selectedGenre === "all") {
-        displayMovies(movies);
+
+        displayMovies(allMovies);
         return;
+
     }
 
-    const filteredMovies = movies.filter(function (movie) {
-        return (
-            movie.Genre &&
-            movie.Genre.toLowerCase().includes(selectedGenre)
-        );
-    });
+    const filteredMovies = allMovies.filter(movie =>
+        movie.Genre.includes(selectedGenre)
+    );
 
     displayMovies(filteredMovies);
-}
 
-if (genreFilter) {
-    genreFilter.addEventListener("change", filterMoviesByGenre);
-}
+});
 
-if (movieList) {
-    searchMovies();
-}
+
+/// LOAD MOVIES AUTOMATICALLY ///
+
+loadMovies();
