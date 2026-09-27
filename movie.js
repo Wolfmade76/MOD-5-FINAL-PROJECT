@@ -7,19 +7,25 @@ const searchInput = document.querySelector("#searchInput");
 const searchBtn = document.querySelector(".search__btn");
 const movieList = document.querySelector(".movie__list");
 const genreFilter = document.querySelector("#genreFilter");
+
 const menuOpen = document.querySelector(".menu__open");
 const menuClose = document.querySelector(".menu__close");
 const menu = document.querySelector(".burger");
 
-menuOpen.addEventListener("click", function () {
-    menu.classList.add("active");
-    console.log('button works')
-});
+let allMovies = [];
 
-menuClose.addEventListener("click", function () {
-    menu.classList.remove("active");
-    console.log('button works')
-});
+/// BURGER MENU ///
+
+if (menuOpen && menuClose && menu) {
+    menuOpen.addEventListener("click", () => {
+        menu.classList.add("active");
+    });
+
+    menuClose.addEventListener("click", () => {
+        menu.classList.remove("active");
+    });
+}
+
 /// THESE ARE THE DYNAMIC SEARCH TAGS ///
 
 const searchTerms = [
@@ -39,18 +45,16 @@ const searchTerms = [
     "grown"
 ];
 
-let allMovies = [];
-
 /// LOAD MOVIES WHEN THE PAGE OPENS ///
 
 async function loadMovies() {
+    if (!movieList) return;
 
     movieList.innerHTML = "<p>Loading movies...</p>";
 
     const moviesMap = new Map();
 
     for (const term of searchTerms) {
-
         const response = await fetch(
             `${API_URL}?apikey=${API_KEY}&s=${term}`
         );
@@ -60,39 +64,49 @@ async function loadMovies() {
         if (!data.Search) continue;
 
         const detailedMovies = await Promise.all(
-
             data.Search.map(async movie => {
-
                 const details = await fetch(
                     `${API_URL}?apikey=${API_KEY}&i=${movie.imdbID}`
                 );
 
                 return await details.json();
-
             })
-
         );
 
         detailedMovies.forEach(movie => {
             moviesMap.set(movie.imdbID, movie);
         });
-
     }
 
     allMovies = [...moviesMap.values()];
-
     displayMovies(allMovies);
-
 }
 
-/// SEARCH BAR SEARCH ///
+/// SEARCH BAR ///
 
 async function searchMovie() {
     const movieName = searchInput.value.trim();
+
+    if (!movieName) return;
+
+    window.location.href =
+        `movie.html?search=${encodeURIComponent(movieName)}`;
+}
+
+/// LOAD SEARCHED MOVIES FROM THE URL ///
+
+async function loadSearchedMovie() {
+    if (!movieList) return;
+
+    const params = new URLSearchParams(window.location.search);
+    const movieName = params.get("search");
+
     if (!movieName) {
-        displayMovies(allMovies);
+        loadMovies();
         return;
     }
+
+    movieList.innerHTML = "<p>Searching...</p>";
 
     const response = await fetch(
         `${API_URL}?apikey=${API_KEY}&s=${movieName}`
@@ -106,74 +120,75 @@ async function searchMovie() {
     }
 
     const searchedMovies = await Promise.all(
-
         data.Search.map(async movie => {
-
             const details = await fetch(
                 `${API_URL}?apikey=${API_KEY}&i=${movie.imdbID}`
             );
 
             return await details.json();
-
         })
-
     );
-    window.location.href = `movie.html?search=${encodeURIComponent(movieName)}`;
-    displayMovies(searchedMovies);
 
+    allMovies = searchedMovies;
+    displayMovies(searchedMovies);
 }
 
 /// TURN JAVASCRIPT INTO HTML ///
 
 function displayMovies(movieArray) {
-
     movieList.innerHTML = "";
 
     movieArray.forEach(movie => {
-
         movieList.innerHTML += `
             <div class="movie">
-
                 <img
-                    src="${movie.Poster !== "N/A" ? movie.Poster : "https://placehold.co/300x450?text=No+Poster"}"
+                    src="${movie.Poster !== "N/A"
+                        ? movie.Poster
+                        : "https://placehold.co/300x450?text=No+Poster"}"
                     alt="${movie.Title}"
                 >
 
                 <h2>${movie.Title}</h2>
-
                 <p>${movie.Year}</p>
-
                 <p><strong>${movie.Genre}</strong></p>
-
             </div>
         `;
-
     });
-
 }
 
 /// GENRE FILTER ///
 
-genreFilter.addEventListener("change", () => {
+if (genreFilter) {
+    genreFilter.addEventListener("change", () => {
+        const selectedGenre = genreFilter.value;
 
-    const selectedGenre = genreFilter.value;
+        if (selectedGenre === "all") {
+            displayMovies(allMovies);
+            return;
+        }
 
-    if (selectedGenre === "all") {
+        const filteredMovies = allMovies.filter(movie =>
+            movie.Genre.includes(selectedGenre)
+        );
 
-        displayMovies(allMovies);
-        return;
+        displayMovies(filteredMovies);
+    });
+}
 
-    }
+/// SEARCH BUTTON & ENTER KEY ///
 
-    const filteredMovies = allMovies.filter(movie =>
-        movie.Genre.includes(selectedGenre)
-    );
+if (searchBtn) {
+    searchBtn.addEventListener("click", searchMovie);
+}
 
-    displayMovies(filteredMovies);
+if (searchInput) {
+    searchInput.addEventListener("keydown", event => {
+        if (event.key === "Enter") {
+            searchMovie();
+        }
+    });
+}
 
-});
+/// START EVERYTHING ///
 
-
-/// LOAD MOVIES AUTOMATICALLY ///
-
-loadMovies();
+loadSearchedMovie();
