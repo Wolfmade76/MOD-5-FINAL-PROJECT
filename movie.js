@@ -7,7 +7,19 @@ const searchInput = document.querySelector("#searchInput");
 const searchBtn = document.querySelector(".search__btn");
 const movieList = document.querySelector(".movie__list");
 const genreFilter = document.querySelector("#genreFilter");
+const menuOpen = document.querySelector(".menu__open");
+const menuClose = document.querySelector(".menu__close");
+const menu = document.querySelector(".burger");
 
+menuOpen.addEventListener("click", function () {
+    menu.classList.add("active");
+    console.log('button works')
+});
+
+menuClose.addEventListener("click", function () {
+    menu.classList.remove("active");
+    console.log('button works')
+});
 /// THESE ARE THE DYNAMIC SEARCH TAGS ///
 
 const searchTerms = [
