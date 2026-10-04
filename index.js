@@ -21,13 +21,13 @@ let allMovies = [];
 /// ==============================
 
 if (menuOpen && menuClose && menu) {
-  menuOpen.addEventListener("click", () => {
-    menu.classList.add("active");
-  });
+    menuOpen.addEventListener("click", () => {
+        menu.classList.add("active");
+    });
 
-  menuClose.addEventListener("click", () => {
-    menu.classList.remove("active");
-  });
+    menuClose.addEventListener("click", () => {
+        menu.classList.remove("active");
+    });
 }
 
 /// ==============================
@@ -35,20 +35,20 @@ if (menuOpen && menuClose && menu) {
 /// ==============================
 
 const searchTerms = [
-  "star",
-  "love",
-  "man",
-  "girl",
-  "night",
-  "world",
-  "life",
-  "home",
-  "dark",
-  "war",
-  "king",
-  "scream",
-  "spider",
-  "grown"
+    "star",
+    "love",
+    "man",
+    "girl",
+    "night",
+    "world",
+    "life",
+    "home",
+    "dark",
+    "war",
+    "king",
+    "scream",
+    "spider",
+    "grown"
 ];
 
 /// ==============================
@@ -57,44 +57,44 @@ const searchTerms = [
 
 async function loadMovies() {
 
-  if (!movieList) return;
+    if (!movieList) return;
 
-  movieList.innerHTML = "<p>Loading movies...</p>";
+    movieList.innerHTML = "<p>Loading movies...</p>";
 
-  const moviesMap = new Map();
+    const moviesMap = new Map();
 
-  for (const term of searchTerms) {
+    for (const term of searchTerms) {
 
-    const response = await fetch(
-      `${API_URL}?apikey=${API_KEY}&s=${term}`
-    );
-
-    const data = await response.json();
-
-    if (!data.Search) continue;
-
-    const detailedMovies = await Promise.all(
-
-      data.Search.map(async movie => {
-
-        const details = await fetch(
-          `${API_URL}?apikey=${API_KEY}&i=${movie.imdbID}`
+        const response = await fetch(
+            `${API_URL}?apikey=${API_KEY}&s=${term}`
         );
 
-        return await details.json();
+        const data = await response.json();
 
-      })
+        if (!data.Search) continue;
 
-    );
+        const detailedMovies = await Promise.all(
 
-    detailedMovies.forEach(movie => {
-      moviesMap.set(movie.imdbID, movie);
-    });
+            data.Search.map(async movie => {
 
-  }
+                const details = await fetch(
+                    `${API_URL}?apikey=${API_KEY}&i=${movie.imdbID}`
+                );
 
-  allMovies = [...moviesMap.values()];
-  displayMovies(allMovies);
+                return await details.json();
+
+            })
+
+        );
+
+        detailedMovies.forEach(movie => {
+            moviesMap.set(movie.imdbID, movie);
+        });
+
+    }
+
+    allMovies = [...moviesMap.values()];
+    displayMovies(allMovies);
 
 }
 
@@ -104,33 +104,33 @@ async function loadMovies() {
 
 function goToMoviePage() {
 
-  if (!searchInput) return;
+    if (!searchInput) return;
 
-  const movieName = searchInput.value.trim();
+    const movieName = searchInput.value.trim();
 
-  if (movieName === "") {
-    alert("Please type a movie name.");
-    return;
-  }
+    if (movieName === "") {
+        alert("Please type a movie name.");
+        return;
+    }
 
-  window.location.href =
-    `movie.html?search=${encodeURIComponent(movieName)}`;
+    window.location.href =
+        `movie.html?search=${encodeURIComponent(movieName)}`;
 
 }
 
 if (searchButton) {
-  searchButton.addEventListener("click", goToMoviePage);
+    searchButton.addEventListener("click", goToMoviePage);
 }
 
 if (searchInput) {
 
-  searchInput.addEventListener("keydown", event => {
+    searchInput.addEventListener("keydown", event => {
 
-    if (event.key === "Enter") {
-      goToMoviePage();
-    }
+        if (event.key === "Enter") {
+            goToMoviePage();
+        }
 
-  });
+    });
 
 }
 
@@ -140,47 +140,47 @@ if (searchInput) {
 
 async function loadSearchedMovie() {
 
-  if (!movieList) return;
+    if (!movieList) return;
 
-  const params = new URLSearchParams(window.location.search);
-  const movieName = params.get("search");
+    const params = new URLSearchParams(window.location.search);
+    const movieName = params.get("search");
 
-  if (!movieName) {
-    loadMovies();
-    return;
-  }
+    if (!movieName) {
+        loadMovies();
+        return;
+    }
 
-  movieList.innerHTML = "<p>Searching...</p>";
+    movieList.innerHTML = "<p>Searching...</p>";
 
-  const response = await fetch(
-    `${API_URL}?apikey=${API_KEY}&s=${movieName}`
-  );
+    const response = await fetch(
+        `${API_URL}?apikey=${API_KEY}&s=${movieName}`
+    );
 
-  const data = await response.json();
+    const data = await response.json();
 
-  if (!data.Search) {
+    if (!data.Search) {
 
-    movieList.innerHTML = "<p>No movies found.</p>";
-    return;
+        movieList.innerHTML = "<p>No movies found.</p>";
+        return;
 
-  }
+    }
 
-  const searchedMovies = await Promise.all(
+    const searchedMovies = await Promise.all(
 
-    data.Search.map(async movie => {
+        data.Search.map(async movie => {
 
-      const details = await fetch(
-        `${API_URL}?apikey=${API_KEY}&i=${movie.imdbID}`
-      );
+            const details = await fetch(
+                `${API_URL}?apikey=${API_KEY}&i=${movie.imdbID}`
+            );
 
-      return await details.json();
+            return await details.json();
 
-    })
+        })
 
-  );
+    );
 
-  allMovies = searchedMovies;
-  displayMovies(searchedMovies);
+    allMovies = searchedMovies;
+    displayMovies(searchedMovies);
 
 }
 
@@ -190,20 +190,20 @@ async function loadSearchedMovie() {
 
 function displayMovies(movieArray) {
 
-  movieList.innerHTML = "";
+    movieList.innerHTML = "";
 
-  movieArray.forEach(movie => {
+    movieArray.forEach(movie => {
 
-    movieList.innerHTML += `
+        movieList.innerHTML += `
 
-      <div class="movie">
+    <div class="movie">
 
         <img
-          src="${movie.Poster !== "N/A"
-            ? movie.Poster
-            : "https://placehold.co/300x450?text=No+Poster"}"
-          alt="${movie.Title}"
-        >
+        src="${movie.Poster !== "N/A"
+                ? movie.Poster
+                : "https://placehold.co/300x450?text=No+Poster"}"
+    alt="${movie.Title}"
+        
 
         <h2>${movie.Title}</h2>
 
@@ -211,11 +211,11 @@ function displayMovies(movieArray) {
 
         <p><strong>${movie.Genre}</strong></p>
 
-      </div>
+    </div>
 
     `;
 
-  });
+    });
 
 }
 
@@ -225,24 +225,24 @@ function displayMovies(movieArray) {
 
 if (genreFilter) {
 
-  genreFilter.addEventListener("change", () => {
+    genreFilter.addEventListener("change", () => {
 
-    const selectedGenre = genreFilter.value;
+        const selectedGenre = genreFilter.value;
 
-    if (selectedGenre === "all") {
+        if (selectedGenre === "all") {
 
-      displayMovies(allMovies);
-      return;
+            displayMovies(allMovies);
+            return;
 
-    }
+        }
 
-    const filteredMovies = allMovies.filter(movie =>
-      movie.Genre.includes(selectedGenre)
-    );
+        const filteredMovies = allMovies.filter(movie =>
+            movie.Genre.includes(selectedGenre)
+        );
 
-    displayMovies(filteredMovies);
+        displayMovies(filteredMovies);
 
-  });
+    });
 
 }
 
